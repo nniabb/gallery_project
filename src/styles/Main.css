@@ -1,0 +1,134 @@
+.header{
+  background-image: url('../assets/headerimg.jpg');
+  background-position: center bottom calc(22%);
+  box-shadow: 0 0 15px 0;
+  height: 400px;
+  width: 100%;
+  margin-bottom: 80px;
+  background-size: cover;
+  opacity: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+}   
+  
+.image-input{
+  width: 500px;
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  padding: 0 0 0 2%;
+  opacity: 80%;
+}
+  
+.image-input::placeholder{
+  font-size: 15px;
+  color: gray;
+  letter-spacing: 2px;
+}
+  
+.image-input:hover{
+  opacity: 100%;
+  transition: opacity .1s ease;
+}
+  
+.search{
+  color: white;
+  font-family: fantasy;
+  font-size: 44px;
+  letter-spacing: 4px;
+  margin-bottom: 30px;
+  margin-top: 8%;
+}
+  
+.photos-container{
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 10px;
+  justify-content: center;
+  padding: 2% 0;
+} 
+  
+.photo{
+  width: 260px;
+  height: 220px;
+  object-fit: cover;
+  cursor: pointer;
+  margin: 10px 7px;
+  box-shadow: 1px 4px 10px rgb(121, 88, 58) ;
+  border-radius: 10px;
+  object-fit: cover;
+} 
+  
+.photo:hover{
+  transform: translateY(-5px);
+  transition: transform .2s ease;
+}
+  
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.74);
+  z-index: 999; 
+}
+
+.modal-content {
+  background: rgb(243, 218, 224);
+  display: flex;
+  align-items: center;
+  padding: 3% 10% 3% 5%;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
+  font-size: 35px;
+  color: #0e0d0d;
+}
+
+.selected-image {
+  max-width: 550px;
+  max-height: 500px;
+  border-radius: 5px;
+}
+
+.icons-side{
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-left: 30px;
+}
+
+.history{
+  margin-top: 20px;
+  text-decoration: none;
+  font-size: 18px;
+  font-family: fantasy;
+  letter-spacing: 2px;
+  color: white;
+}
+
+.statistics{
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.statistics-p{
+  color: rgb(66, 58, 58);
+  font-size: 20px;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
