@@ -8,26 +8,44 @@ import { Link } from 'react-router-dom';
 import Heart from '../svg-components/Heart';
 import Download from '../svg-components/Download';
 import Views from '../svg-components/Views';
+import Photo from '../Photo.interface';
+import { useSearch } from '../context/Search';
 
-
-interface Photo {
-    id: string;
-    alt_description: string;
-    urls: {
-        regular: string;
-    };
-    views: number;
-    downloads: number;
-    likes: number;
-}
 
 const MainComponent: React.FC = () => {
+    const { searchTerm, setSearchTerm } = useSearch(); 
     const [photos, setPhotos] = useState<Photo[]>([]);
     const [page, setPage] = useState<number>(1);
-    const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
-    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [searchHistory, setSearchHistory] = useState<string[]>([]);
+    const [modal, setModal] = useState<boolean>(false);
     const loader = useRef<HTMLDivElement>(null);
+
+
+    const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    }
+
+
+    const handleSearchSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            const newSearchTerm = searchTerm.trim();
+            if (newSearchTerm !== '') {
+                const updatedHistory = [...searchHistory, newSearchTerm];
+                localStorage.setItem('searchHistory', JSON.stringify(updatedHistory));
+                setSearchHistory(updatedHistory);
+            }
+        }
+    }
+
+
+    useEffect(() => {
+        const history = localStorage.getItem('searchHistory');
+        if (history) {
+            setSearchHistory(JSON.parse(history));
+        }
+    }, [])
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,6 +56,7 @@ const MainComponent: React.FC = () => {
                         per_page: 20,
                         order_by: 'popular',
                         client_id: 'eBDy23tTc28SH5hXsGQjd4U2yGSn_lTmajhGrLzBHP4',
+
                     },
                 });
 
@@ -45,12 +64,13 @@ const MainComponent: React.FC = () => {
                     setPhotos((prevPhotos) => [...prevPhotos, ...response.data]);
                 }
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error(error);
             }
         };
 
         fetchData();
-    }, [page]);
+    }, [page])
+
 
     useEffect(() => {
         const options = {
@@ -59,7 +79,7 @@ const MainComponent: React.FC = () => {
             threshold: 0,
         };
 
-        const observer = new IntersectionObserver(handleObserver, options);
+        const observer = new IntersectionObserver(handleIntersection, options);
         if (loader.current) {
             observer.observe(loader.current);
         }
@@ -67,18 +87,16 @@ const MainComponent: React.FC = () => {
         return () => {
             observer.disconnect();
         };
-    }, []);
+    }, [])
 
-    const handleObserver: IntersectionObserverCallback = (entries) => {
+
+    const handleIntersection: IntersectionObserverCallback = (entries) => {
         const target = entries[0];
         if (target.isIntersecting) {
             setPage((prevPage) => prevPage + 1);
         }
-    };
+    }
 
-    const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(event.target.value);
-    };
 
     const handleImageClick = async (photo: Photo) => {
         try {
@@ -94,40 +112,44 @@ const MainComponent: React.FC = () => {
                 downloads: response.data.downloads,
                 likes: response.data.likes,
             });
-            setModalOpen(true); 
+            setModal(true); 
         } catch (error) {
             console.error('Error fetching photo details:', error);
         }
     };
 
+
     const closeModal = () => {
         setSelectedPhoto(null);
-        setModalOpen(false); 
+        setModal(false); 
     };
+
 
     const filteredPhotos = photos.filter((photo) => {
         return photo.alt_description && photo.alt_description.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
+
     useEffect(() => {
-        if (modalOpen) {
+        if (modal) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'auto';
         }
-    }, [modalOpen]);
+    }, [modal]);
+
 
     return (
         <div className="App">
             <div className='header'>
                 <p className='search'>Search An Image</p>
-
                 <input
                     type='text'
                     className='image-input'
                     placeholder='search here'
                     value={searchTerm}
-                    onChange={handleSearchChange}
+                    onChange={handleSearch}
+                    onKeyDown={handleSearchSubmit}
                 />
                 <Link to='/History' className='history'>History Page</Link>
             </div>
@@ -145,7 +167,7 @@ const MainComponent: React.FC = () => {
                             onClick={() => handleImageClick(photo)}
                         />
                     </motion.div>
-                ))}
+                    ))}
                 <div ref={loader} style={{ textAlign: 'center' }}></div>
             </div>
             {selectedPhoto && (
@@ -166,4 +188,4 @@ const MainComponent: React.FC = () => {
 }
 
 
-export default MainComponent;
+export default MainComponent; 
