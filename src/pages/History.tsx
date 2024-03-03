@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import '../../src/styles/History.css';
 import Search from '../svg-components/Search';
-import Delete from '../svg-components/Delete';
 import { useSearch } from "../context/Search"; 
 import { useNavigate } from "react-router-dom";
 
@@ -19,13 +18,6 @@ const HistoryPage: React.FC = () => {
         }
     }, []);
 
-    const handleDelete = (index: number) => {
-        const updatedHistory = [...searchHistory];
-        updatedHistory.splice(index, 1);
-        setSearchHistory(updatedHistory);
-        localStorage.setItem('searchHistory', JSON.stringify(updatedHistory));
-    };
-
     const handleHistoryClick = (term: string) => {
         setSearchTerm(term); 
         navigate('/'); 
@@ -41,9 +33,6 @@ const HistoryPage: React.FC = () => {
                     {searchHistory.map((item, index) => (
                         <div className="history-box" key={index} onClick={() => handleHistoryClick(item)}>
                             <p className="searches">Searched for {item}</p>
-                            <div className="delete-btn" onClick={(e) => { e.stopPropagation(); handleDelete(searchHistory.length - 1 - index); }}>
-                                <Delete />
-                            </div>
                         </div>
                     ))}
                 </ul>

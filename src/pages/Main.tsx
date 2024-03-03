@@ -74,8 +74,7 @@ const MainComponent: React.FC = () => {
                         client_id: 'eBDy23tTc28SH5hXsGQjd4U2yGSn_lTmajhGrLzBHP4',
 
                     },
-                });
-
+                }); 
                 if (response.data.length > 0) {
                     setPhotos((prevPhotos) => [...prevPhotos, ...response.data]);
                 }
@@ -204,4 +203,4 @@ const MainComponent: React.FC = () => {
 }
 
 
-export default MainComponent;  
+export default MainComponent;
