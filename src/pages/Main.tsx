@@ -22,6 +22,8 @@ const MainComponent: React.FC = () => {
     const loader = useRef<HTMLDivElement>(null);
 
 
+
+
     const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     }
@@ -31,13 +33,20 @@ const MainComponent: React.FC = () => {
         if (event.key === 'Enter') {
             const newSearchTerm = searchTerm.trim();
             if (newSearchTerm !== '') {
-                const updatedHistory = [...searchHistory, newSearchTerm];
-                localStorage.setItem('searchHistory', JSON.stringify(updatedHistory));
-                setSearchHistory(updatedHistory);
+                if (searchHistory.includes(newSearchTerm)) {
+                    const updatedHistory = searchHistory.filter(term => term !== newSearchTerm);
+                    updatedHistory.unshift(newSearchTerm);
+                    localStorage.setItem('searchHistory', JSON.stringify(updatedHistory));
+                    setSearchHistory(updatedHistory);
+                } else {
+                    const updatedHistory = [newSearchTerm, ...searchHistory];
+                    localStorage.setItem('searchHistory', JSON.stringify(updatedHistory));
+                    setSearchHistory(updatedHistory);
+                }
             }
         }
-    }
-
+    };
+    
 
     useEffect(() => {
         const history = localStorage.getItem('searchHistory');
@@ -46,6 +55,13 @@ const MainComponent: React.FC = () => {
         }
     }, [])
 
+
+    useEffect(() => {
+        const history = localStorage.getItem('searchHistory');
+        if (history) {
+            setSearchHistory(JSON.parse(history));
+        }
+    }, [])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -70,7 +86,7 @@ const MainComponent: React.FC = () => {
 
         fetchData();
     }, [page])
-
+    
 
     useEffect(() => {
         const options = {
@@ -188,4 +204,4 @@ const MainComponent: React.FC = () => {
 }
 
 
-export default MainComponent; 
+export default MainComponent;  

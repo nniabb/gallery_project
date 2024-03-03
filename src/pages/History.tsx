@@ -38,7 +38,7 @@ const HistoryPage: React.FC = () => {
                 <Search />
                 <h2>Your Search History</h2>
                 <ul>
-                    {searchHistory.slice(0).reverse().map((item, index) => (
+                    {searchHistory.map((item, index) => (
                         <div className="history-box" key={index} onClick={() => handleHistoryClick(item)}>
                             <p className="searches">Searched for {item}</p>
                             <div className="delete-btn" onClick={(e) => { e.stopPropagation(); handleDelete(searchHistory.length - 1 - index); }}>
@@ -52,4 +52,4 @@ const HistoryPage: React.FC = () => {
     );
 };
 
-export default HistoryPage;
+export default HistoryPage;  
